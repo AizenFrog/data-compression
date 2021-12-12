@@ -3,7 +3,8 @@ project(data_compression_algorithms)
 set (CMAKE_CXX_STANDARD 17)
 
 # Huffman lib
-add_library(huffman SHARED src/huffman.cpp)
+add_library(huffman SHARED src/huffman_encode.cpp
+                           src/huffman_decode.cpp)
 target_include_directories(huffman PUBLIC include/)
 
 #examples
