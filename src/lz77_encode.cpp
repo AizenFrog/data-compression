@@ -54,7 +54,7 @@ void shift_dictionary(std::size_t& start, std::size_t& end, std::size_t length)
 {
     end += length + 1;
     if (end - start > dictionary_size)
-        start += end - dictionary_size;
+        start += length + 1;
 }
 
 std::size_t lz77_encode(const std::uint8_t* src, const std::size_t src_size, std::uint8_t* dst)
@@ -65,17 +65,17 @@ std::size_t lz77_encode(const std::uint8_t* src, const std::size_t src_size, std
 
     std::list<node> encode_table;
 
-    while(src_ptr != src_size) {
+    while(src_ptr < src_size) {
         encode_table.push_back(find_matching(src, src_ptr, dictionary_start, dictionary_end));
         shift_dictionary(dictionary_start, dictionary_end, encode_table.back().length);
         src_ptr += encode_table.back().length + 1;
     }
 
     //for (auto elem : encode_table)
-    //    std::cout << elem.offset << ", " << elem.length << ", " << std::bitset<8>(elem.literal) << std::endl;
+    //    std::cout << elem.offset << ", " << elem.length << ", " << elem.literal << std::endl;
 
     std::size_t dst_ptr = 0;
-    for (auto elem : encode_table) {
+    for (auto& elem : encode_table) {
         *(reinterpret_cast<std::uint16_t*>(dst + dst_ptr)) = elem.offset;
         dst_ptr += sizeof(std::uint16_t);
         *(reinterpret_cast<std::uint16_t*>(dst + dst_ptr)) = elem.length;
