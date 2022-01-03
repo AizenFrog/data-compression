@@ -23,7 +23,7 @@ void get_statistic(const std::uint8_t* src, const std::size_t size, std::size_t*
         statistic[src[i]]++;
 }
 
-std::size_t huffman_encode(const std::uint8_t* src, const std::size_t size, std::uint8_t* dst)
+std::size_t huffman_encode(const std::uint8_t* src, const std::size_t src_size, std::uint8_t* dst)
 {
     // for (std::size_t i = 0; i < size; ++i)
     //     std::cout << src[i];
@@ -32,7 +32,7 @@ std::size_t huffman_encode(const std::uint8_t* src, const std::size_t size, std:
     using namespace detail;
     // initialize tree leaf
     std::size_t st[256];
-    get_statistic(src, size, st);
+    get_statistic(src, src_size, st);
     //auto grater = [](node* a, node* b) mutable -> bool { return *a > *b; };
     std::priority_queue<node<std::uint8_t>*, std::vector<node<std::uint8_t>*>, greater> q;
     std::size_t dst_index = 0;
@@ -86,7 +86,7 @@ std::size_t huffman_encode(const std::uint8_t* src, const std::size_t size, std:
 
     std::size_t bit_ptr = 0;
     std::size_t byte_ptr = dst_index;
-    for (std::size_t i = 0; i < size; ++i) {
+    for (std::size_t i = 0; i < src_size; ++i) {
         for (int j = 0; j < codes[src[i]].size(); ++j) {
             if (bit_ptr >= 8) {
                 bit_ptr = 0;

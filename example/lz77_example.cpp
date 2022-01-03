@@ -5,7 +5,7 @@
 #include <chrono>
 #include <assert.h>
 
-#include "huffman.hpp"
+#include "lz77.hpp"
 
 // don't forget about remove memory!!!
 std::size_t open_file(const char* file_name, std::uint8_t** src)
@@ -47,28 +47,12 @@ void save_file(const char* file_name, const std::uint8_t* src, const std::size_t
 
 void print_help()
 {
-    std::cout << "Huffman example:\nHelp message:\n";
-    std::cout << "<PathToExecutable>/huffman_example <encode/decode> <input file name> <output file name>\n";
+    std::cout << "LZ77 example:\nHelp message:\n";
+    std::cout << "<PathToExecutable>/lz77_example <encode/decode> <input file name> <output file name>\n";
 }
 
 int main(int argc, char** argv)
 {
-    // char src[] = { "beep boop beer!" };
-    // char cmp[200];
-    // char dcp[50];
-    // std::memset(cmp, 0, 200);
-    // std::size_t real_size = huffman::huffman_encode((std::uint8_t*)src, sizeof(src), (std::uint8_t*)cmp);
-    // std::cout << "compressed size - " << real_size << std::endl;
-    // for (int i = 0; i < real_size; ++i)
-    //     std::cout << std::bitset<8>(cmp[i]) << "|";
-    // std::cout << std::endl;
-
-    // std::size_t decompressed_size = huffman::huffman_decode((std::uint8_t*)cmp, real_size, (std::uint8_t*)dcp);
-    // std::cout << "decompressed size - " << decompressed_size << std::endl;
-    // for (int i = 0; i < decompressed_size; ++i)
-    //     std::cout << dcp[i];
-    // std::cout << std::endl;
-
     if (argc != 4) {
         print_help();
         return 0;
@@ -84,7 +68,7 @@ int main(int argc, char** argv)
         std::uint8_t* dst = new std::uint8_t[file_size];
 
         std::chrono::time_point<std::chrono::high_resolution_clock> start_time = std::chrono::high_resolution_clock::now();
-        std::size_t compressed_size = huffman::huffman_encode(src, file_size, dst);
+        std::size_t compressed_size = lz77::lz77_encode(src, file_size, dst);
         std::chrono::time_point<std::chrono::high_resolution_clock> end_time = std::chrono::high_resolution_clock::now();
         double time = std::chrono::duration_cast<std::chrono::duration<double>>(end_time - start_time).count();
 
@@ -105,7 +89,7 @@ int main(int argc, char** argv)
         std::uint8_t* dst = new std::uint8_t[file_size * 10];
 
         std::chrono::time_point<std::chrono::high_resolution_clock> start_time = std::chrono::high_resolution_clock::now();
-        std::size_t decompressed_size = huffman::huffman_decode(src, file_size, dst);
+        std::size_t decompressed_size = lz77::lz77_decode(src, file_size, dst);
         std::chrono::time_point<std::chrono::high_resolution_clock> end_time = std::chrono::high_resolution_clock::now();
         double time = std::chrono::duration_cast<std::chrono::duration<double>>(end_time - start_time).count();
 
@@ -124,3 +108,22 @@ int main(int argc, char** argv)
 
     return 0;
 }
+
+// int main(int argc, char** argv)
+// {
+//     char src[] = { "abacabacabadaca" };
+//     char cmp[50];
+//     char dcp[20];
+//     std::size_t real_size = lz77::lz77_encode((std::uint8_t*)src, sizeof(src), (std::uint8_t*)cmp);
+//     std::cout << "real size - " << real_size << std::endl;
+//     for (int i = 0; i < real_size; ++i)
+//         std::cout << cmp[i];
+
+//     std::size_t decompress_size = lz77::lz77_decode((std::uint8_t*)cmp, real_size, (std::uint8_t*)dcp);
+//     std::cout << "decompressed size - " << decompress_size << std::endl;
+//     for (int i = 0; i < decompress_size; ++i)
+//         std::cout << dcp[i];
+//     std::cout << std::endl;
+
+//     return 0;
+// }
