@@ -11,14 +11,15 @@
     type: "BUILD"
     working_directory: "/buddy/data-compression"
     docker_image_name: "library/gcc"
-    docker_image_tag: "11"
+    docker_image_tag: "latest"
     execute_commands:
     - "mkdir build && cd build"
     - "cmake -DCMAKE_BUILD_TYPE=Release .."
     - "cmake --build . --config -j8"
     - "./bin/tests/tests"
     setup_commands:
-    - "apt-get install cmake"
+    - "apt-get update --fix-missing && apt-get -y install cmake"
     volume_mappings:
     - "/:/buddy/data-compression"
+    cache_base_image: true
     shell: "BASH"
