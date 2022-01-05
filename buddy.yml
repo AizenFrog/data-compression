@@ -17,6 +17,8 @@
     - "cmake -DCMAKE_BUILD_TYPE=Release .."
     - "cmake --build . --config -j8"
     - "./bin/tests/tests"
+    setup_commands:
+    - "apt-get -y install cmake"
     volume_mappings:
     - "/:/buddy/data-compression"
     shell: "BASH"
