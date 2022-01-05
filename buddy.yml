@@ -18,7 +18,7 @@
     - "cmake --build . --config -j8"
     - "./bin/tests/tests"
     setup_commands:
-    - "apt-get -y install cmake"
+    - "apt-get install cmake"
     volume_mappings:
     - "/:/buddy/data-compression"
     shell: "BASH"
