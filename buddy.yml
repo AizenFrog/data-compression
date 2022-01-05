@@ -13,8 +13,9 @@
     docker_image_name: "library/gcc"
     docker_image_tag: "latest"
     execute_commands:
-    - "mkdir build"
-    - "cd build"
+    - "if [ -d ./build ]; then"
+    - "\trm -rf ./build"
+    - "mkdir build && cd build"
     - "cmake -DCMAKE_BUILD_TYPE=Release .."
     - "cmake --build . --config -j8"
     - "./bin/tests/tests"
@@ -24,3 +25,4 @@
     - "/:/buddy/data-compression"
     cache_base_image: true
     shell: "BASH"
+    execute_every_command: true
