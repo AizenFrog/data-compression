@@ -13,7 +13,8 @@
     docker_image_name: "library/gcc"
     docker_image_tag: "latest"
     execute_commands:
-    - "mkdir build && cd build"
+    - "mkdir build"
+    - "cd build"
     - "cmake -DCMAKE_BUILD_TYPE=Release .."
     - "cmake --build . --config -j8"
     - "./bin/tests/tests"
