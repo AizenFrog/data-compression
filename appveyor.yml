@@ -5,6 +5,9 @@ environment:
 
 build_script:
   - cmd: git submodule update --init --recursive
+  - cmd: if exist build\ (
+  - cmd: rmdir /s /q build\
+  - cmd: )
   - cmd: mkdir build && cd build
   - cmd: cmake ..
   - cmd: cmake --build . --config Release
