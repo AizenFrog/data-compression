@@ -15,6 +15,7 @@
     execute_commands:
     - "if [ -d ./build ]; then"
     - "\trm -rf ./build"
+    - "fi"
     - "mkdir build && cd build"
     - "cmake -DCMAKE_BUILD_TYPE=Release .."
     - "cmake --build . --config -j8"
