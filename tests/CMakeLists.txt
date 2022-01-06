@@ -1,8 +1,8 @@
 # adding gtest library
-add_subdirectory(${CMAKE_SOURCE_DIR}/3rd_party/gtest ${CMAKE_BINARY_DIR}/3rd_party/gtest EXCLUDE_FROM_ALL)
 if (WIN32)
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 endif()
+add_subdirectory(${CMAKE_SOURCE_DIR}/3rd_party/gtest ${CMAKE_BINARY_DIR}/3rd_party/gtest EXCLUDE_FROM_ALL)
 
 # adding tests
 add_executable(tests main.cpp
