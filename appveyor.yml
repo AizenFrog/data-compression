@@ -9,4 +9,4 @@ build_script:
   - cmd: mkdir build && cd build
   - cmd: cmake ..
   - cmd: cmake --build . --config Release
-  - cmd: bin\tests\tests
+  - cmd: bin\tests\Release\tests
