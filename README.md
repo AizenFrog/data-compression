@@ -8,12 +8,13 @@ This repository contains the source code of my master's degree project.
 
 ```
     $ git clone https://github.com/AizenFrog/data-compression.git
+    $ cd data-compression
+    $ git submodule update --init --recursive
 ```
 
 ### Configured and build with cmake:
 
 ```
-    $ cd data-compression
     $ cmake -S . -B ./build
     $ cd build
     $ cmake --build . --config <Config_Type>
