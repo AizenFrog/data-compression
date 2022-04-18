@@ -1,6 +1,7 @@
 # Huffman lib
 add_library(huffman STATIC huffman_encode.cpp
-                           huffman_decode.cpp)
+                           huffman_decode.cpp
+                           dynamic_huffman_encode.cpp)
 target_include_directories(huffman PUBLIC ${CMAKE_SOURCE_DIR}/include/)
 set_target_properties(huffman PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 

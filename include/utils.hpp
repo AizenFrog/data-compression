@@ -2,6 +2,7 @@
 
 #include <map>
 #include <vector>
+#include <bitset>
 
 namespace detail {
 
@@ -22,22 +23,22 @@ public:
         }
     }
 
-    node<BaseUnitT>* get_left()
+    inline node<BaseUnitT>* get_left()
     {
         return left;
     }
 
-    node<BaseUnitT>* get_right()
+    inline node<BaseUnitT>* get_right()
     {
         return right;
     }
 
-    std::size_t get_weight()
+    inline std::size_t get_weight()
     {
         return weight;
     }
 
-    BaseUnitT get_literal()
+    inline BaseUnitT get_literal()
     {
         return literal;
     }
@@ -60,11 +61,46 @@ public:
         }
     }
 
-private:
+protected:
     node<BaseUnitT>* left;
     node<BaseUnitT>* right;
     std::size_t weight;
     BaseUnitT literal;
+};
+
+template <typename BaseUnitT>
+class d_node final : public node<BaseUnitT> {
+public:
+    d_node() = delete;
+    d_node(const std::size_t _weight, const BaseUnitT _literal) : node<BaseUnitT>(_weight, _literal),
+                                                      parent(nullptr),
+                                                      code_size(1),
+                                                      code(0) {}
+
+    d_node(d_node<BaseUnitT>* first, d_node<BaseUnitT>* second) : node<BaseUnitT>(first, second),
+                                                                  parent(nullptr),
+                                                                  code_size(first->code_size + 1), // ????
+                                                                  code(0) {}
+
+    inline d_node<BaseUnitT>* get_parent()
+    {
+        return parent;
+    }
+
+    inline std::bitset<sizeof(std::uint32_t) * 8>& get_code()
+    {
+        return code;
+    }
+
+    void operator++()
+    {
+        this->weight++;
+    }
+
+private:
+    d_node<BaseUnitT>* parent;
+    std::uint32_t code_size;
+    std::bitset<sizeof(std::uint32_t) * 8> code;
 };
 
 template <typename BaseUnitT>
@@ -92,5 +128,39 @@ public:
     template <typename BaseUnitT>
     bool operator()(node<BaseUnitT>* a, node<BaseUnitT>* b) { return *a > *b; }
 };
+
+/* template <typename BaseUnitT>
+struct tree_node {
+    tree_node() : weight(0), code_size(1), code(0), literal(0) {}
+    tree_node(std::size_t _weight, BaseUnitT _literal) : weight(_weight), code(0), literal(_literal) {}
+
+    std::size_t weight;
+    std::uint32_t code_size;
+    std::bitset<sizeof(std::uint32_t) * 8> code;
+    BaseUnitT literal;
+};
+
+template <typename BaseUnitT>
+struct tree {
+    tree() : current(nullptr), left(nullptr), right(nullptr), parent(nullptr) {}
+
+    tree_node<BaseUnitT>* current;
+    tree_node<BaseUnitT>* left;
+    tree_node<BaseUnitT>* right;
+    tree_node<BaseUnitT>* parent;
+
+    static void clear_tree(tree<BaseUnitT>* root)
+    {
+        if (root != nullptr) {
+            tree<BaseUnitT>* tmp_left  = root->left;
+            tree<BaseUnitT>* tmp_right = root->right;
+            delete root;
+            if (tmp_left != nullptr)
+                clear_tree(tmp_left);
+            if (tmp_right != nullptr)
+                clear_tree(tmp_right);
+        }
+    }
+}; */
 
 }
