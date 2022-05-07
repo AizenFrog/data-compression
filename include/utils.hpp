@@ -127,38 +127,4 @@ public:
     bool operator()(node<BaseUnitT>* a, node<BaseUnitT>* b) { return *a > *b; }
 };
 
-/* template <typename BaseUnitT>
-struct tree_node {
-    tree_node() : weight(0), code_size(1), code(0), literal(0) {}
-    tree_node(std::size_t _weight, BaseUnitT _literal) : weight(_weight), code(0), literal(_literal) {}
-
-    std::size_t weight;
-    std::uint32_t code_size;
-    std::bitset<sizeof(std::uint32_t) * 8> code;
-    BaseUnitT literal;
-};
-
-template <typename BaseUnitT>
-struct tree {
-    tree() : current(nullptr), left(nullptr), right(nullptr), parent(nullptr) {}
-
-    tree_node<BaseUnitT>* current;
-    tree_node<BaseUnitT>* left;
-    tree_node<BaseUnitT>* right;
-    tree_node<BaseUnitT>* parent;
-
-    static void clear_tree(tree<BaseUnitT>* root)
-    {
-        if (root != nullptr) {
-            tree<BaseUnitT>* tmp_left  = root->left;
-            tree<BaseUnitT>* tmp_right = root->right;
-            delete root;
-            if (tmp_left != nullptr)
-                clear_tree(tmp_left);
-            if (tmp_right != nullptr)
-                clear_tree(tmp_right);
-        }
-    }
-}; */
-
 }

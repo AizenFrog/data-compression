@@ -77,6 +77,7 @@ inline void rebuild_tree(std::list<d_node<std::uint8_t>*>& root, d_node<std::uin
             //std::cout << "i_elem - " << (*i_elem)->get_literal() << " " << (*i_elem)->get_weight() << std::endl;
 
             if (*new_place == (*i_elem)->get_parent()) {
+                set_node_code((*i_elem)->get_parent());
                 i_elem = new_place;
                 continue;
             }
@@ -117,10 +118,6 @@ std::size_t dynamic_huffman_encode(const std::uint8_t* src, const std::size_t sr
     // now the root of tree is equal to an empty element
     std::list<d_node<std::uint8_t>*> root(leafs);
 
-    // statistic
-    std::size_t statistic[256];
-    std::memset(statistic, 0, 256 * sizeof(std::size_t));
-
     std::size_t   real_size = 0;
     std::uint32_t bit_index = 0;
     std::uint8_t  tmp       = 0;
@@ -155,23 +152,19 @@ std::size_t dynamic_huffman_encode(const std::uint8_t* src, const std::size_t sr
             if (zero_node_parent != nullptr)
                 zero_node_parent->set_right(new_node);
 
-            rebuild_tree(root, new_leaf);
-
             code |= new_leaf->get_literal();
             code_size = zero_node->get_code_size();
             code <<= code_size;
             code |= zero_node->get_code();
             code_size += 8;
             //std::cout << "code size - " << code_size << "; code: " << code << std::endl;
+            rebuild_tree(root, new_leaf);
         }
         else {
             code      = current_leaf->get_code();
             code_size = current_leaf->get_code_size();
             rebuild_tree(root, current_leaf);
         }
-
-        statistic[literal]++;
-        // rebuild_tree(root, current_leaf);
 
         std::size_t n_code = code.to_ullong();
         for (std::uint32_t i = 0; i < code_size; ++i) {
