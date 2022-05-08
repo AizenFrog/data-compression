@@ -3,6 +3,7 @@
 #include <bitset>
 
 #include "huffman.hpp"
+#include "trees.hpp"
 #include "utils.hpp"
 
 namespace huffman {
@@ -13,89 +14,6 @@ namespace huffman {
                                                 }
 
 using namespace detail;
-
-inline void set_node_code(d_node<std::uint8_t>* node)
-{
-    std::bitset<sizeof(std::uint32_t) * 8> p_code = node->get_code();
-    std::uint32_t p_code_size = node->get_code_size();
-
-    if (node->get_left() != nullptr) {
-        p_code.set(p_code_size);
-        reinterpret_cast<d_node<std::uint8_t>*>(node->get_left())->set_code(p_code);
-        reinterpret_cast<d_node<std::uint8_t>*>(node->get_left())->set_code_size(p_code_size + 1);
-        set_node_code(reinterpret_cast<d_node<std::uint8_t>*>(node->get_left()));
-    }
-    if (node->get_right() != nullptr) {
-        p_code.reset(p_code_size);
-        reinterpret_cast<d_node<std::uint8_t>*>(node->get_right())->set_code(p_code);
-        reinterpret_cast<d_node<std::uint8_t>*>(node->get_right())->set_code_size(p_code_size + 1);
-        set_node_code(reinterpret_cast<d_node<std::uint8_t>*>(node->get_right()));
-    }
-}
-
-inline void swap_elements(std::list<d_node<std::uint8_t>*>::reverse_iterator& i_elem,
-                          std::list<d_node<std::uint8_t>*>::reverse_iterator& new_place) {
-    // std::cout << "swap - " << (*new_place)->get_literal() << " " << (*new_place)->get_weight() << std::endl;
-    bool is_left_new_place = (*new_place)->get_parent()->get_left() == (*new_place) ? true : false;
-    bool is_left_i_elem    = (*i_elem)->get_parent()->get_left() == (*i_elem) ? true : false;
-    if (is_left_new_place)
-        (*new_place)->get_parent()->set_left(*i_elem);
-    else
-        (*new_place)->get_parent()->set_right(*i_elem);
-    if (is_left_i_elem)
-        (*i_elem)->get_parent()->set_left(*new_place);
-    else
-        (*i_elem)->get_parent()->set_right(*new_place);
-    d_node<std::uint8_t>* tmp = (*i_elem)->get_parent();
-    (*i_elem)->set_parent((*new_place)->get_parent());
-    (*new_place)->set_parent(tmp);
-    std::swap(*i_elem, *new_place);
-    std::swap(i_elem, new_place);
-}
-
-inline void rebuild_tree(std::list<d_node<std::uint8_t>*>& root, d_node<std::uint8_t>* leaf) {
-    auto i_elem = root.rbegin();
-
-    for (; i_elem != root.rend(); ++i_elem)
-        if ((*i_elem) == leaf)
-            break;
-
-    while (true) {
-        ++(*(*i_elem));
-        if (*i_elem == root.front())
-            break;
-        else {
-            // root of the tree is at the beginning,
-            // so we need to use operator --
-            auto new_place = i_elem;
-            ++new_place;
-
-            if (*new_place == (*i_elem)->get_parent()) {
-                set_node_code((*i_elem)->get_parent());
-                i_elem = new_place;
-                continue;
-            }
-
-            if ((*i_elem)->get_weight() > (*new_place)->get_weight()) {
-                auto tmp_place = new_place;
-                ++tmp_place;
-                while ((*i_elem)->get_weight() > (*tmp_place)->get_weight()) {
-                    ++new_place;
-                    ++tmp_place;
-                }
-                // swap parents and order in list
-                swap_elements(i_elem, new_place);
-            }
-            set_node_code((*i_elem)->get_parent());
-            auto parent = i_elem;
-            ++parent;
-            while (*parent != (*i_elem)->get_parent() && (*i_elem)->get_parent() != nullptr) {
-                ++parent;
-            }
-            i_elem = parent;
-        }
-    }
-}
 
 std::size_t dynamic_huffman_decode(const std::uint8_t* src, const std::size_t src_size, std::uint8_t* dst)
 {
@@ -125,7 +43,8 @@ std::size_t dynamic_huffman_decode(const std::uint8_t* src, const std::size_t sr
                 literal = 0;
                 if (element->get_literal() == std::uint8_t(0) && element->get_weight() == 0) {
                     for (std::uint32_t i = 0; i < 8; ++i) {
-                        literal += src[src_index] & (1 << bit_index++);
+                        literal += ((src[src_index] & (1 << bit_index)) >> bit_index) << i;
+                        ++bit_index;
                         IncrementCounters(src_index, bit_index);
                     }
                     d_node<std::uint8_t>* zero_node = root.back();
@@ -140,6 +59,9 @@ std::size_t dynamic_huffman_decode(const std::uint8_t* src, const std::size_t sr
                     root.push_back(new_node);
                     root.push_back(new_leaf);
                     root.push_back(zero_node);
+
+                    if (zero_node_parent != nullptr)
+                        zero_node_parent->set_right(new_node);
 
                     rebuild_tree(root, new_leaf);
                 }
