@@ -17,7 +17,6 @@ TEST(Huffman, decode_defauld_sequence)
     char dst[sizeof(src)];
     std::memset(buffer, 0, buffer_size);
     std::size_t real_size = huffman::huffman_encode((std::uint8_t*)src, sizeof(src), (std::uint8_t*)buffer);
-    std::cout << real_size << std::endl;
     ASSERT_NO_THROW(huffman::huffman_decode((std::uint8_t*)buffer, real_size, (std::uint8_t*)dst));
 }
 

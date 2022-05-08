@@ -4,6 +4,7 @@
 #include <queue>
 
 #include "huffman.hpp"
+#include "trees.hpp"
 #include "utils.hpp"
 
 namespace huffman {
