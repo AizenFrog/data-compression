@@ -69,9 +69,7 @@ public:
     d_node(d_node<BaseUnitT>* first, d_node<BaseUnitT>* second) : node<BaseUnitT>(first, second),
                                                                   parent(nullptr),
                                                                   code_size(0),
-                                                                  code(0) {
-        // this->weight = 1;
-    }
+                                                                  code(0) {}
 
     inline d_node<BaseUnitT>* get_parent() { return parent; }
 

@@ -1,25 +1,17 @@
-#include <iostream>
-#include <cstring>
-#include <bitset>
-#include <huffman.hpp>
+#include "huffman.hpp"
+#include "details/example_class.hpp"
 
 int main(int argc, char** argv)
 {
-    std::size_t buffer_size = 500;
-    char src[] = { "hello world!" };
-    char buffer[buffer_size];
-    char dst[sizeof(src)];
-    std::memset(buffer, 0, buffer_size);
-    std::cout << "real size - " << sizeof(src) << std::endl;
-    std::size_t real_size = huffman::dynamic_huffman_encode((std::uint8_t*)src, sizeof(src), (std::uint8_t*)buffer);
-    std::cout << "compress is completed!\n";
-    for (std::size_t i = 0; i < real_size; ++i)
-        std::cout << std::bitset<8>(buffer[i]) << "|";
-    std::cout << std::endl;
-    std::size_t decompressed_size = huffman::dynamic_huffman_decode((std::uint8_t*)buffer, real_size, (std::uint8_t*)dst);
-    std::cout << "decompress size - " << decompressed_size << std::endl;
-    for (std::size_t i = 0; i < sizeof(src); ++i)
-        std::cout << char(dst[i]);
-    std::cout << std::endl;
+    example_class example("Dynamic Huffman", huffman::dynamic_huffman_encode, huffman::dynamic_huffman_decode);
+    if (argc != 4) {
+        example.print_help();
+        return 0;
+    }
+    std::string mode        = argv[1];
+    std::string input_file  = argv[2];
+    std::string output_file = argv[3];
+
+    example.execute(mode, input_file, output_file);
     return 0;
 }
