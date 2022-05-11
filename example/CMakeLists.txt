@@ -1,15 +1,16 @@
 # examples
-# huffman
-add_executable(huffman_example huffman_example.cpp)
-target_link_libraries(huffman_example PRIVATE huffman)
-set_target_properties(huffman_example PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+function(add_example algorithm)
+    set(example_name ${algorithm}_example)
+    add_executable(${example_name} ${example_name}.cpp "details/example_class.cpp")
+    target_link_libraries(${example_name} PRIVATE ${ARGN})
+    set_target_properties(${example_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+endfunction(add_example)
 
-# dynamoc huffman
-add_executable(dynamic_huffman_example dynamic_huffman_example.cpp)
-target_link_libraries(dynamic_huffman_example PRIVATE huffman)
-set_target_properties(dynamic_huffman_example PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+# huffman
+add_example(huffman huffman)
+
+# dynamic huffman
+add_example(dynamic_huffman huffman)
 
 # lz77
-add_executable(lz77_example lz77_example.cpp)
-target_link_libraries(lz77_example PRIVATE lz77)
-set_target_properties(lz77_example PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+add_example(lz77 lz77)
