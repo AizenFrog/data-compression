@@ -26,10 +26,6 @@ void get_statistic(const std::uint8_t* src, const std::size_t size, std::size_t*
 
 std::size_t huffman_encode(const std::uint8_t* src, const std::size_t src_size, std::uint8_t* dst)
 {
-    // for (std::size_t i = 0; i < size; ++i)
-    //     std::cout << src[i];
-    // std::cout << std::endl;
-
     using namespace detail;
     // initialize tree leaf
     std::size_t st[256];
@@ -55,12 +51,6 @@ std::size_t huffman_encode(const std::uint8_t* src, const std::size_t src_size, 
         }
     dst[dst_index++] = barrier;
 
-    // std::cout << "count - " << dst_index <<std::endl;
-    // for (std::size_t i = 0; i < dst_index; ++i)
-    //     std::cout << std::bitset<8>(dst[i]) << " | ";
-    // std::cout << std::endl;
-
-
     // build tree
     while (q.size() != 1) {
         node<std::uint8_t>* first = const_cast<node<std::uint8_t>*>(q.top());
@@ -78,13 +68,6 @@ std::size_t huffman_encode(const std::uint8_t* src, const std::size_t src_size, 
     std::vector<bool> cache{};
     get_codes(root, codes, cache);
 
-    // for (auto code : codes) {
-    //     std::cout << "symbol - " << code.first << ", code - ";
-    //     for (auto bit : code.second)
-    //         std::cout << bit;
-    //     std::cout << std::endl;
-    // }
-
     std::size_t bit_ptr = 0;
     std::size_t byte_ptr = dst_index;
     for (std::size_t i = 0; i < src_size; ++i) {
@@ -97,9 +80,6 @@ std::size_t huffman_encode(const std::uint8_t* src, const std::size_t src_size, 
         }
     }
 
-    // for (std::size_t i = 0; i < byte_ptr + 1; ++i)
-    //     std::cout << std::bitset<8>(dst[i]);
-    // std::cout << std::endl;
     node<std::uint8_t>::clear_tree(root);
     return byte_ptr + 1;
 }

@@ -26,7 +26,6 @@ void get_codes(node<BaseUnitT>* root,
     }
     if (root->get_left() == nullptr && root->get_right() == nullptr)
         codes[root->get_literal()] = cache;
-
 }
 
 class greater {
@@ -83,8 +82,11 @@ inline void rebuild_tree(std::list<d_node<std::uint8_t>*>& root, d_node<std::uin
     while (true) {
         ++(*(*i_elem));
 
-        if (*i_elem == root.front())
+        if (*i_elem == root.front()) {
+            // calling this function just once (on some file this worse than it multiple times times)
+            // set_node_code(*i_elem);
             break;
+        }
 
         else {
             // root of the tree is at the beginning,
@@ -92,7 +94,8 @@ inline void rebuild_tree(std::list<d_node<std::uint8_t>*>& root, d_node<std::uin
             auto new_place = i_elem;
             ++new_place;
 
-            if (*new_place == (*i_elem)->get_parent() && (*i_elem)->get_weight() <= 1) {
+            // 1st adding weight to leaf and adding weight to single leaf in tree
+            if (*new_place == (*i_elem)->get_parent() && ((*i_elem)->get_weight() <= 1 || (*new_place)->get_parent() == nullptr)) {
                 set_node_code((*i_elem)->get_parent());
                 i_elem = new_place;
                 continue;
@@ -106,7 +109,8 @@ inline void rebuild_tree(std::list<d_node<std::uint8_t>*>& root, d_node<std::uin
                     ++tmp_place;
                 }
                 // swap parents and order in list
-                swap_elements(i_elem, new_place);
+                if ((*i_elem)->get_parent() != *new_place)
+                    swap_elements(i_elem, new_place);
             }
             set_node_code((*i_elem)->get_parent());
             auto parent = i_elem;
