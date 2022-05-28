@@ -24,7 +24,6 @@ std::size_t huffman_decode(const std::uint8_t* src, const std::size_t src_size, 
             barrier = *(src + src_index);
             is_first = false;
             q.push(new node<std::uint8_t>(*(reinterpret_cast<const std::size_t*>(src + src_index + 1)), src[src_index]));
-            //std::cout << "literal - " << std::bitset<8>(src[src_index]) << ", count - " << *(reinterpret_cast<const std::size_t*>(src + src_index + 1)) <<std::endl;
             src_index += sizeof(std::uint8_t) + sizeof(std::size_t);
             continue;
         }
@@ -33,7 +32,6 @@ std::size_t huffman_decode(const std::uint8_t* src, const std::size_t src_size, 
             break;
         }
         q.push(new node<std::uint8_t>(*(reinterpret_cast<const std::size_t*>(src + src_index + 1)), src[src_index]));
-        //std::cout << "literal - " << std::bitset<8>(src[src_index]) << ", count - " << *(reinterpret_cast<const std::size_t*>(src + src_index + 1)) <<std::endl;
         src_index += sizeof(std::uint8_t) + sizeof(std::size_t);
     }
 

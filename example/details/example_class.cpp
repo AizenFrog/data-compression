@@ -59,6 +59,7 @@ void example_class::execute(const std::string& mode, const std::string& input_fi
         std::size_t file_size = file_open(input_file, &src);
 
         std::uint8_t* dst = new std::uint8_t[file_size];
+        std::memset(dst, 0, file_size);
 
         std::chrono::time_point<std::chrono::high_resolution_clock> start_time = std::chrono::high_resolution_clock::now();
         std::size_t compressed_size = encode_func(src, file_size, dst);
@@ -80,6 +81,7 @@ void example_class::execute(const std::string& mode, const std::string& input_fi
         std::size_t file_size = file_open(input_file, &src);
 
         std::uint8_t* dst = new std::uint8_t[file_size * 10];
+        std::memset(dst, 0, file_size * 10);
 
         std::chrono::time_point<std::chrono::high_resolution_clock> start_time = std::chrono::high_resolution_clock::now();
         std::size_t decompressed_size = decode_func(src, file_size, dst);

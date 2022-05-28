@@ -36,7 +36,7 @@ std::size_t dynamic_huffman_decode(const std::uint8_t* src, const std::size_t sr
     rebuild_tree(root, first_leaf);
 
     std::uint32_t bit_index = 0;
-    while (src_index != src_size) {
+    while (src_index < src_size) {
         d_node<std::uint8_t>* element = root.front();
         while(true) {
             if (element->get_left() == nullptr && element->get_right() == nullptr) {
