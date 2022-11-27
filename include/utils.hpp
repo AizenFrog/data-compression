@@ -9,6 +9,16 @@
 
 namespace detail {
 
+inline void* allocate_memory(const std::size_t size)
+{
+    return malloc(size);
+}
+
+inline void deallocate_memory(void* ptr)
+{
+    free(ptr);
+}
+
 template <typename BaseUnitT>
 void get_codes(node<BaseUnitT>* root,
                std::map<BaseUnitT, std::vector<bool>>& codes,

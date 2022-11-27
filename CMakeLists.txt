@@ -8,5 +8,8 @@ add_subdirectory(src)
 # adding tests
 add_subdirectory(tests)
 
+# aading benchmarks
+add_subdirectory(benchmarks)
+
 #examples
 add_subdirectory(example)
